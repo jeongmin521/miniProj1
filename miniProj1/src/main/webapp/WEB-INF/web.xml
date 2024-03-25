@@ -15,7 +15,7 @@
 	
 	<servlet>
 		<servlet-name>userServlet</servlet-name>
-		<servlet-class>com.user.UserServlet</servlet-class>
+		<servlet-class>user.UserServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
