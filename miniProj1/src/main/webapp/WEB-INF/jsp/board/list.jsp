@@ -36,6 +36,18 @@
 </head>
 <body>
 	<h1>게시물목록</h1>
+	<form id="searchForm" action="board.do" method="post" >
+    	<input type="hidden" id="action" name="action" value="list">
+    	<label>제목</label>
+    	<input type="text" id="searchKey" name="searchKey" value="${param.searchKey}">
+    	<input type="submit" value="검색">
+    </form>
+    
+    <form id="listForm" action="board.do" method="post">
+    	<input type="hidden" id="action" name="action" value="view">
+    	<input type="hidden" id="bno" name="bno" >
+    </form>
+    
     <table border="1">
         <tr>
             <th>게시물번호</th>
@@ -43,17 +55,26 @@
             <th>작성자</th>
             <th>작성일</th>
         </tr>
+        <c:forEach var="board" items="${list}">
         <tr>
-            <td>임시번호</td>
-            <td><a href="board.do?action=view">제목을 누르면 상세 페이지 이동합니다</a></td>
-            <td>임시작성자</td>
-            <td>임시날짜</td>
+            <td onclick="jsView('${board.bno}')"  style="cursor:pointer;">${board.bno}</td>
+            <td><a href="board.do?action=view&bno=${board.bno}">${board.btitle}</a></td>
+            <td>${board.buserid}</td>
+            <td>${board.bdate}</td>
         </tr>
+        </c:forEach>
     </table>
-
-<div class="button-container">
-	<a href="board.do?action=insertForm">등록</a>
-</div>
-
+	<script>
+		function jsView(bno) {
+			//인자의 값을 설정한다 
+			bno.value = bno;
+			
+			//양식을 통해서 서버의 URL로 값을 전달한다
+			listForm.submit();
+		}
+	</script>     
+	<div class="button-container">
+	    <a href="board.do?action=insertForm">등록</a>
+	</div>
 </body>
 </html>
