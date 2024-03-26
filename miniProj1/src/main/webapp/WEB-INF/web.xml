@@ -12,25 +12,13 @@
 		<welcome-file>default.jsp</welcome-file>
 		<welcome-file>default.htm</welcome-file>
 	</welcome-file-list>
-	
 	<servlet>
-		<servlet-name>userServlet</servlet-name>
-		<servlet-class>user.UserServlet</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>userServlet</servlet-name>
-		<url-pattern>/user.do</url-pattern>
-	</servlet-mapping>	
-
-
-	<servlet>
-		<servlet-name>boardsServlet</servlet-name>
+		<servlet-name>boardServlet</servlet-name>
 		<servlet-class>board.BoardServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>boardsServlet</servlet-name>
+		<servlet-name>boardServlet</servlet-name>
 		<url-pattern>/board.do</url-pattern>
 	</servlet-mapping>	
 
