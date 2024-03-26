@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>게시물 목록</title>
+    <title>회원 리스트</title>
     <style>
         table {
             width: 100%;
@@ -35,25 +35,23 @@
     </style>
 </head>
 <body>
-	<h1>게시물목록</h1>
+	<h1>회원목록</h1>
+
     <table border="1">
         <tr>
-            <th>게시물번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
+            <th>ID</th>
+            <th>이름</th>
+            <th>나이</th>
+            <th>이메일</th>
         </tr>
         <tr>
-            <td>임시번호</td>
-            <td><a href="board.do?action=view">제목을 누르면 상세 페이지 이동합니다</a></td>
-            <td>임시작성자</td>
-            <td>임시날짜</td>
+            <td>임시아이디</td>
+            <td><a href="user.do?action=view">이름 누르면 상세 페이지 이동합니다</a></td>
+            <td>임시 나이</td>
+            <td>임시 이메일</td>
         </tr>
-    </table>
-
-<div class="button-container">
-	<a href="board.do?action=insertForm">등록</a>
-</div>
-
+    </table> 
+    <br>
+    <button onclick="location.href='index.html'">홈 화면으로 </button>
 </body>
 </html>

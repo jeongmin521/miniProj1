@@ -12,6 +12,7 @@
 		<welcome-file>default.jsp</welcome-file>
 		<welcome-file>default.htm</welcome-file>
 	</welcome-file-list>
+	<!-- BoardServlet 매핑 -->
 	<servlet>
 		<servlet-name>boardServlet</servlet-name>
 		<servlet-class>board.BoardServlet</servlet-class>
@@ -20,6 +21,18 @@
 	<servlet-mapping>
 		<servlet-name>boardServlet</servlet-name>
 		<url-pattern>/board.do</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
+	<!-- UserServlet 매핑 -->
+	<servlet>
+		<servlet-name>userServlet</servlet-name>
+		<servlet-class>user.UserServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>userServlet</servlet-name>
+		<url-pattern>/user.do</url-pattern>
+	</servlet-mapping>
+	
+	
 
 </web-app>
