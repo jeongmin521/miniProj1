@@ -45,13 +45,15 @@
         </tr>
         <tr>
             <td>임시번호</td>
-            <td>임시제목</td>
+            <td><a href="board.do?action=view">제목을 누르면 상세 페이지 이동합니다</a></td>
             <td>임시작성자</td>
             <td>임시날짜</td>
         </tr>
     </table>
-<script>
+    
+<div class="button-container">
+	<a href="board.do?action=insertForm">등록</a>
+</div>
 
-</script>
 </body>
 </html>

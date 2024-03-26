@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 /**
  * Servlet implementation class BoardServlet
  */
@@ -46,6 +47,9 @@ public class BoardServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		switch(action) {
 		case "list" -> list(request, response);
+		case "view" -> view(request, response);
+		case "insertForm" -> insertForm(request, response);
+		case "updateForm" -> updateForm(request, response);
 		}
 		//jsp 포워딩 
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/board/"+action+".jsp");
@@ -58,6 +62,25 @@ public class BoardServlet extends HttpServlet {
 		list.add("게시물리스트");
 		
 		request.setAttribute("list", list);
+	}
+	
+	private void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("상세");
+		List<String> board = new ArrayList<>();
+		board.add("상세보기");
+		request.setAttribute("board", board);
+		
+	}
+	private void insertForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<String> insertForm = new ArrayList<>();
+		insertForm.add("등록하기");
+		request.setAttribute("insertForm", insertForm);
+		
+	}
+	private void updateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<String> updateForm = new ArrayList<>();
+		updateForm.add("수정하기");
+		request.setAttribute("updateForm", updateForm);
 		
 	}
 	
