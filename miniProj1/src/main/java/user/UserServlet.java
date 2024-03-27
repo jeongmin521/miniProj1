@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import board.BoardVO;
-import user.UserVO;
+
 
 /**
  * Servlet implementation class UserServlet
@@ -75,9 +75,13 @@ public class UserServlet extends HttpServlet {
 	}
 	
 	private void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<String> user = new ArrayList<>();
-		user.add("회원상세");
-		request.setAttribute("user", user);		
+		System.out.println("상세보기");
+		String userid = request.getParameter("userid");
+		//1. 처리
+		UserVO user = userDAO.read(userid);
+		
+		//2. jsp출력할 값 설정
+		request.setAttribute("user", user);
 	}
 	
 	private void joinForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

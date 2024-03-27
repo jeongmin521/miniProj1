@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import board.BoardVO;
 import user.UserVO;
 
 
@@ -21,6 +22,7 @@ public class UserDAO {
 	private static Connection conn = null;
     private static PreparedStatement userListPstmt = null;
     private static PreparedStatement userListPstmt2 = null; //회원 검색
+    private static PreparedStatement userDetailPstmt = null;
     
     static {
 
@@ -40,6 +42,7 @@ public class UserDAO {
 
             userListPstmt = conn.prepareStatement("select * from tb_users");
             userListPstmt2 = conn.prepareStatement("select * from tb_users where username like ?");
+            userDetailPstmt = conn.prepareStatement("select * from tb_users where userid like ?");
             // 5. 결과 처리
             // 6. 연결 해제
         } catch (ClassNotFoundException e) {
@@ -75,5 +78,28 @@ public class UserDAO {
             e.printStackTrace();
         }
         return list;
+    }
+    
+    public UserVO read(String userid) {
+        UserVO user = null;
+        try {
+            userDetailPstmt.setString(1, userid);
+
+            ResultSet rs = userDetailPstmt.executeQuery();
+            if (rs.next()) {
+                user = new UserVO (rs.getString("userid")
+                		, rs.getString("userpassword")
+                		, rs.getString("username")
+                		, rs.getInt("userage")
+                        , rs.getString("useremail")
+                        , rs.getString("userphone")
+                        , rs.getString("useraddress"));
+            }
+            rs.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }

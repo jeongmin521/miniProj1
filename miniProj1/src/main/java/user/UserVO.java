@@ -15,16 +15,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserVO {
 	private String userid;
-	private String userpassword;
 	private String username;
 	private int    userage;
+	private String userpassword;
 	private String useremail;
-	private String gender;
-	private String phone;
-	private String address;
+	private String usergender;
+	private String useraddress;
+	private String userphone;
 	
-	private String userpassword2;
-	private String err;
 	
 	//실행 명령 필드 
 	private String action;
@@ -45,6 +43,17 @@ public class UserVO {
 		this.username = username;
 		this.userage = userage;
 		this.useremail = useremail;
+	}
+	
+	public UserVO(String userid, String userpassword, String username, int userage, String useremail, String userphone, String useraddress) {
+		super();
+		this.userid = userid;
+		this.userpassword = userpassword;
+		this.username = username;
+		this.userage = userage;
+		this.useremail = useremail;
+		this.userphone = userphone;
+		this.useraddress = useraddress;
 	}
 	
 	public boolean isEmptySearchKey() {

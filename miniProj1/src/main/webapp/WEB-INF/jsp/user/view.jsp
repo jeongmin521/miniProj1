@@ -23,11 +23,13 @@
         회원 상세보기
     </h1>
     
-	  <label>이름: </label> <br/>
-      <label>아이디 :</label><br/>
-      <label>비밀번호 : </label><br/>
-      <label>나이 : </label><br/>
-      <label>이메일 : </label><br/>
+	  <label>이름: ${user.username}</label> <br/>
+      <label>아이디 : ${user.userid}</label><br/>
+      <label>비밀번호 : ${user.userpassword}</label><br/>
+      <label>나이 : ${user.userage}</label><br/>
+      <label>이메일 : ${user.useremail}</label><br/>
+      <label>전화번호 : ${user.userphone}</label><br/>
+      <label>주소 : ${user.useraddress}</label><br/>
    
     <div>
         <a href="user.do?action=list">목록</a>
