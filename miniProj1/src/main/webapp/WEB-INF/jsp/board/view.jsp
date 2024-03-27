@@ -23,11 +23,11 @@
         게시물 상세보기
     </h1>
     
-	  <label>게시물 번호: </label> <br/>
-      <label>제목 :</label><br/>
-      <label>내용 : </label><br/>
-      <label>작성자 : </label><br/>
-      <label>작성일 : </label><br/>
+	  <label>게시물 번호: ${board.bno}</label> <br/>
+      <label>제목 : ${board.btitle}</label><br/>
+      <label>내용 : ${board.bcontent}</label><br/>
+      <label>작성자 : ${board.buserid}</label><br/>
+      <label>작성일 : ${board.bdate}</label><br/>
    
     <div>
         <a href="board.do?action=list">목록</a>

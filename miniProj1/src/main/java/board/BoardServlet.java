@@ -50,7 +50,7 @@ public class BoardServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		switch(action) {
 		case "list" -> list(request, response);
-//		case "view" -> view(request, response);
+		case "view" -> view(request, response);
 //		case "updateForm" -> updateForm(request, response);
 //		case "insertForm" -> insertForm(request, response);
 		}
@@ -72,12 +72,19 @@ public class BoardServlet extends HttpServlet {
 
 	}
 	
-//	private void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		List<String> board = new ArrayList<>();
-//		board.add("상세보기");
-//		request.setAttribute("board", board);		
-//	}
-//	
+	private String view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("상세보기");
+		Integer bno = Integer.parseInt(request.getParameter("bno"));
+		//1. 처리
+		BoardVO board = boardDAO.read(bno);
+		
+		//2. jsp출력할 값 설정
+		request.setAttribute("board", board);
+		return "view";
+	}
+	
+
+	
 //	private void insertForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //		List<String> insertForm = new ArrayList<>();
 //		insertForm.add("등록하기");

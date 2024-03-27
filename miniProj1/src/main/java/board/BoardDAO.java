@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class BoardDAO {
     // 1. 게시물 목록 만들기
     // 2. 삭제 구현
@@ -17,6 +18,7 @@ public class BoardDAO {
     private static Connection conn = null;
     private static PreparedStatement boardListPstmt = null; //게시글 리스트
     private static PreparedStatement boardListPstmt2 = null; //검색했을때 그 키워드를 가진 게시글 불러오기
+    private static PreparedStatement boardDetailPstmt = null;
 
 
     static {
@@ -37,6 +39,7 @@ public class BoardDAO {
 
             boardListPstmt = conn.prepareStatement("select * from tb_boards");
             boardListPstmt2 = conn.prepareStatement("select * from tb_boards where btitle like ?");
+            boardDetailPstmt = conn.prepareStatement("select * from tb_boards where bno = ?");
 
             // 5. 결과 처리
             // 6. 연결 해제
@@ -61,7 +64,7 @@ public class BoardDAO {
         	}
 
             while (rs.next()) {
-                BoardVO board = new BoardVO(rs.getString("bno")
+                BoardVO board = new BoardVO(rs.getInt("bno")
                         , rs.getString("btitle")
                         , rs.getString("bcontent")
                         , rs.getString("buserid")
@@ -74,6 +77,27 @@ public class BoardDAO {
             e.printStackTrace();
         }
         return list;
+    }
+    
+    public BoardVO read(int bno) {
+        BoardVO board = null;
+        try {
+            boardDetailPstmt.setInt(1, bno);
+
+            ResultSet rs = boardDetailPstmt.executeQuery();
+            if (rs.next()) {
+                board = new BoardVO (rs.getInt("bno")
+                        , rs.getString("btitle")
+                        , rs.getString("bcontent")
+                        , rs.getString("buserid")
+                        , rs.getString("bdate"));
+            }
+            rs.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return board;
     }
 
 }

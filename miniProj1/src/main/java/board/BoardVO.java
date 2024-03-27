@@ -11,17 +11,17 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BoardVO {
 	
-	public BoardVO(String bno, String btitle, String bcontent) {
+	public BoardVO(int bno, String btitle, String bcontent) {
 		this(bno, btitle, bcontent, "", "");
 	}
 
 	
-	public BoardVO(String bno, String btitle, String bcontent, String buserid, String bdate) {
+	public BoardVO(int bno, String btitle, String bcontent, String buserid, String bdate) {
 		this(bno, btitle, bcontent, buserid, bdate, "", "");
 	}
 
 
-	private String bno;
+	private int bno;
 	private String btitle;
 	private String bcontent;
 	private String buserid;
