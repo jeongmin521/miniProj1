@@ -2,17 +2,21 @@ package user;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import board.BoardVO;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Servlet implementation class UserServlet
@@ -48,41 +52,72 @@ public class UserServlet extends HttpServlet {
 	
 	}
 	
+	private Map<String, Object> convertMap(Map<String, String[]> map) {
+		Map<String, Object> result = new HashMap<>();
+
+		for (var entry : map.entrySet()) {
+			if (entry.getValue().length == 1) {
+				//문자열 1건  
+				result.put(entry.getKey(), entry.getValue()[0]);
+			} else {
+				//문자열 배열을 추가한다  
+				result.put(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		String action = request.getParameter("action");
-		UserVO userVO = null;
+		String contentType = request.getContentType();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
+		UserVO userVO = null;
+		if (contentType == null || contentType.startsWith("application/x-www-form-urlencoded")) {
+			userVO = objectMapper.convertValue(convertMap(request.getParameterMap()), UserVO.class);
+		} else if (contentType.startsWith("application/json")) {
+			userVO = objectMapper.readValue(request.getInputStream(), UserVO.class);
+		}
+		System.out.println("userVO " + userVO);
+		
+		String action = userVO.getAction();
 		switch(action) {
-		case "list" -> list(request, response);
-		case "view" -> view(request, response);
+		case "list" -> list(request, userVO);
+		case "view" -> view(request, userVO);
 		case "jointForm" -> joinForm(request, response);
-		case "loginForm" -> loginForm(request, response);
 		case "updateForm" -> updateForm(request, response);
-		case "myPage" -> myPage(request, response);
 		}
 		//jsp 포워딩 
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/"+action+".jsp");
 		rd.forward(request, response);
 	}
 	
-	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public Object list(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+		System.out.println("목록");
+		
 		//1. 처리
-		String searchKey = request.getParameter("searchKey");
-		List<UserVO> list = userDAO.list(searchKey);
-		//2. jsp출력할 값 설정
-		request.setAttribute("list", list);
-	}
-	
-	private void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("상세보기");
-		String userid = request.getParameter("userid");
-		//1. 처리
-		UserVO user = userDAO.read(userid);
+		List<UserVO> list = userDAO.list(user);
 		
 		//2. jsp출력할 값 설정
-		request.setAttribute("user", user);
+		request.setAttribute("list", list);
+		
+		return "list";
 	}
+	
+	public Object view(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+		System.out.println("상세보기");
+		//String userid = request.getParameter("userid");
+		//1. 처리
+		
+		System.out.println("상세보기 유저" + user);
+		//2. jsp출력할 값 설정
+		request.setAttribute("user", userDAO.read(user));
+		return "view";
+	}
+	
 	
 	private void joinForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> joinForm = new ArrayList<>();
@@ -90,22 +125,10 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("joinForm", joinForm);		
 	}
 	
-	private void loginForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<String> loginForm = new ArrayList<>();
-		loginForm.add("로그인하기");
-		request.setAttribute("loginForm", loginForm);	
-	}
-	
 	private void updateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> updateForm = new ArrayList<>();
 		updateForm.add("수정하기");
 		request.setAttribute("updateForm", updateForm);		
-	}
-	
-	private void myPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<String> myPage = new ArrayList<>();
-		myPage.add("마이페이지");
-		request.setAttribute("myPage", myPage);
 	}
 	
 }

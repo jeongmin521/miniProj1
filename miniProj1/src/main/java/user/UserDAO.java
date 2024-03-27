@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import board.BoardVO;
 import user.UserVO;
 
 
@@ -23,6 +22,7 @@ public class UserDAO {
     private static PreparedStatement userListPstmt = null;
     private static PreparedStatement userListPstmt2 = null; //회원 검색
     private static PreparedStatement userDetailPstmt = null;
+    public static PreparedStatement userDeletePstmt = null;
     
     static {
 
@@ -43,6 +43,7 @@ public class UserDAO {
             userListPstmt = conn.prepareStatement("select * from tb_users");
             userListPstmt2 = conn.prepareStatement("select * from tb_users where username like ?");
             userDetailPstmt = conn.prepareStatement("select * from tb_users where userid like ?");
+            userDeletePstmt = conn.prepareStatement("delete * from tb_users where userid like ?");
             // 5. 결과 처리
             // 6. 연결 해제
         } catch (ClassNotFoundException e) {
@@ -53,25 +54,25 @@ public class UserDAO {
         }
     }
 
-    public List<UserVO> list(String searchKey) {
+    public List<UserVO> list(UserVO user) {
         List<UserVO> list = new ArrayList<>();
         try {
         	ResultSet rs = null;
-        	if (searchKey != null && searchKey.length() != 0) {
+        	if (user != null && !user.isEmptySearchKey()) {
         		//검색 키워드 설정 
-        		userListPstmt2.setString(1, searchKey);
+        		userListPstmt2.setString(1, user.getSearchKey());
         		rs = userListPstmt2.executeQuery();
         	} else {
                 rs = userListPstmt.executeQuery();
         	}
             while (rs.next()) {
-                UserVO userVO = new UserVO(rs.getString("userid")
+                UserVO users = new UserVO(rs.getString("userid")
                         , rs.getString("userpassword")
                         , rs.getString("username")
                         , rs.getInt("userage")
                         , rs.getString("useremail"));
                 
-                list.add(userVO);
+                list.add(users);
             }
             rs.close();
         } catch (Exception e) {
@@ -80,26 +81,43 @@ public class UserDAO {
         return list;
     }
     
-    public UserVO read(String userid) {
-        UserVO user = null;
+    public UserVO read(UserVO user) {
+    	System.out.println(user);
+
+        UserVO users = null;
         try {
-            userDetailPstmt.setString(1, userid);
+            userDetailPstmt.setString(1, user.getUserid());
 
             ResultSet rs = userDetailPstmt.executeQuery();
             if (rs.next()) {
-                user = new UserVO (rs.getString("userid")
-                		, rs.getString("userpassword")
-                		, rs.getString("username")
-                		, rs.getInt("userage")
-                        , rs.getString("useremail")
-                        , rs.getString("userphone")
-                        , rs.getString("useraddress"));
+                users = new UserVO(rs.getString("userid")
+                        , rs.getString("userpassword")
+                        , rs.getString("username")
+                        , rs.getInt("userage")
+                        , rs.getString("useremail"));
             }
             rs.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return user;
+        return users;
     }
+    
+    
+    
+    public int delete(UserVO user) {
+        int updated = 0;
+
+        try {
+            userDeletePstmt.setString(1, user.getUserid());
+            updated = userDeletePstmt.executeUpdate();
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updated;
+    }
+    
+    
 }
