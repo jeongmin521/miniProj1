@@ -11,12 +11,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import board.BoardVO;
+import user.UserVO;
+
 /**
  * Servlet implementation class UserServlet
  */
 @WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	UserDAO userDAO = new UserDAO();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,6 +51,8 @@ public class UserServlet extends HttpServlet {
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		String action = request.getParameter("action");
+		UserVO userVO = null;
+		
 		switch(action) {
 		case "list" -> list(request, response);
 		case "view" -> view(request, response);
@@ -60,45 +67,41 @@ public class UserServlet extends HttpServlet {
 	}
 	
 	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<String> list = new ArrayList<>();
-		list.add("회원리스트");
+		//1. 처리
+		String searchKey = request.getParameter("searchKey");
+		List<UserVO> list = userDAO.list(searchKey);
+		//2. jsp출력할 값 설정
 		request.setAttribute("list", list);
 	}
 	
 	private void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> user = new ArrayList<>();
 		user.add("회원상세");
-		request.setAttribute("user", user);
-		
+		request.setAttribute("user", user);		
 	}
 	
 	private void joinForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> joinForm = new ArrayList<>();
 		joinForm.add("회원가입하기");
-		request.setAttribute("joinForm", joinForm);
-		
+		request.setAttribute("joinForm", joinForm);		
 	}
 	
 	private void loginForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> loginForm = new ArrayList<>();
 		loginForm.add("로그인하기");
-		request.setAttribute("loginForm", loginForm);
-		
+		request.setAttribute("loginForm", loginForm);	
 	}
 	
 	private void updateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> updateForm = new ArrayList<>();
 		updateForm.add("수정하기");
-		request.setAttribute("updateForm", updateForm);
-		
+		request.setAttribute("updateForm", updateForm);		
 	}
 	
 	private void myPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<String> myPage = new ArrayList<>();
 		myPage.add("마이페이지");
 		request.setAttribute("myPage", myPage);
-		
 	}
 	
-
 }

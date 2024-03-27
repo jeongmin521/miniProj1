@@ -36,6 +36,17 @@
 </head>
 <body>
 	<h1>회원목록</h1>
+	<form id="searchForm" action="user.do" method="post" >
+		<input type="hidden" id="action" name="action" value="list">
+    	<label>이름 : </label>
+    	<input type="text" id="searchKey" name="searchKey" value="${param.searchKey}">
+    	<input type="submit" value="검색">
+    </form>
+    
+    <form id="listForm" action="user.do" method="post">
+    	<input type="hidden" id="action" name="action" value="view">
+    	<input type="hidden" id="userid" name="userid" >
+    </form>
 
     <table border="1">
         <tr>
@@ -44,12 +55,14 @@
             <th>나이</th>
             <th>이메일</th>
         </tr>
+        <c:forEach var="user" items="${list}">
         <tr>
-            <td>임시아이디</td>
-            <td><a href="user.do?action=view">이름 누르면 상세 페이지 이동합니다</a></td>
-            <td>임시 나이</td>
-            <td>임시 이메일</td>
+            <td>${user.userid}</td>
+            <td><a href="user.do?action=view&userid=${user.userid}">${user.username}</a></td>
+            <td>${user.userage}</td>
+            <td>${user.useremail}</td>
         </tr>
+        </c:forEach>
     </table> 
     <br>
     <button onclick="location.href='index.html'">홈 화면으로 </button>
