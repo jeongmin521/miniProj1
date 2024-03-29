@@ -80,6 +80,8 @@ public class UserServlet extends HttpServlet {
 		case "joinForm" -> userController.joinForm(request);
 		case "join" -> userController.join(request, userVO);
 		case "existUserId" -> userController.existUserId(request, userVO);
+		case "updateForm" -> userController.updateForm(request, userVO);
+		case "update" -> userController.update(request, userVO);
 		default -> "";
 		};
 			

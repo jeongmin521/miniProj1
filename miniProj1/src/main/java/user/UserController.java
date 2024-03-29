@@ -89,5 +89,33 @@ public class UserController {
 		return map;
 	}
 	
+	public Object updateForm(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+		System.out.println("수정화면");
+		//1. 처리
+		//usersDAO.read(user);
+		
+		//2. jsp출력할 값 설정
+		request.setAttribute("user", userService.updateForm(user));
+		
+		return "updateForm"; 
+	}
+	
+	public Object update(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+		System.out.println("수정");
+
+		int updated = userService.update(user);
+
+		Map<String, Object> map = new HashMap<>();
+		if (updated == 1) { //성공
+			map.put("status", 0);
+		} else {
+			map.put("status", -99);
+			map.put("statusMessage", "회원 정보 수정 실패하였습니다");
+		}
+		
+		return map;
+	}
+	
+	
 
 }

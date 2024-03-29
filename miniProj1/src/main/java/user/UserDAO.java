@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UserDAO {
 	// 1. 회원가입 목록 만들기
     // 2. 삭제 구현
@@ -20,6 +21,7 @@ public class UserDAO {
     private static PreparedStatement userListPstmt2 = null; //회원 검색
     private static PreparedStatement userDetailPstmt = null; //회원 상세보기
     private static PreparedStatement userInsertPstmt = null; //회원가입
+    private static PreparedStatement userUpdatePstmt = null;
     
     static {
 
@@ -41,6 +43,7 @@ public class UserDAO {
             userListPstmt2 = conn.prepareStatement("select * from tb_users where username like ?");
             userDetailPstmt = conn.prepareStatement("select * from tb_users where userid like ?");
             userInsertPstmt = conn.prepareStatement("insert into tb_users (userid, username, userpassword, userage, useremail, userphone, useraddress) values (?, ?, ?, ?, ?, ?, ?)");
+            userUpdatePstmt = conn.prepareStatement("update tb_users set username=?, userpassword=?,userage=?, useremail=?, userphone=?, useraddress=? where userid=?");//정보수정
             // 5. 결과 처리
             // 6. 연결 해제
         } catch (ClassNotFoundException e) {
@@ -119,6 +122,25 @@ public class UserDAO {
             e.printStackTrace();
         }
         return updated;
+    }
+    
+    public int update(UserVO users) {
+        int updated = 0;
+        try {
+            userUpdatePstmt.setString(1, users.getUsername());
+            userUpdatePstmt.setString(2, users.getUserpassword());
+            userUpdatePstmt.setInt(3, users.getUserage());
+            userUpdatePstmt.setString(4, users.getUseremail());
+            userUpdatePstmt.setString(5, users.getUserphone());
+            userUpdatePstmt.setString(6, users.getUseraddress());
+            userUpdatePstmt.setString(7, users.getUserid());
+            updated = userUpdatePstmt.executeUpdate();
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updated;
+
     }
     
 }

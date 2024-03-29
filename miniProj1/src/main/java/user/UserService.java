@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-
 public class UserService {
 	private static final long serialVersionUID = 1L;
     
@@ -29,6 +28,14 @@ public class UserService {
 	
 	public int join(UserVO user) throws ServletException, IOException {
 		return userDAO.join(user);
+	}
+	
+	public UserVO updateForm(UserVO user) throws ServletException, IOException {
+		return userDAO.read(user);
+	}
+	
+	public int update(UserVO user) throws ServletException, IOException {
+		return userDAO.update(user);
 	}
 
 }
