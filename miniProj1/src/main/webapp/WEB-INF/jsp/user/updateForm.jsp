@@ -56,7 +56,7 @@ rForm.addEventListener("submit", e => {
 		if(json.status == 0) {
 			//성공
 			alert("회원 정보 수정을 성공 하였습니다");
-			location = "user.do?action=update&userid=" + userid.value;
+			location = "user.do?action=view&userid=" + userid.value;
 		} else {
 			alert(json.statusMessage);
 		}
