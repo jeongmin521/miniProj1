@@ -19,7 +19,6 @@ public class UserDAO {
     private static PreparedStatement userListPstmt = null;
     private static PreparedStatement userListPstmt2 = null; //회원 검색
     private static PreparedStatement userDetailPstmt = null;
-    public static PreparedStatement userDeletePstmt = null;
     
     static {
 
@@ -40,7 +39,6 @@ public class UserDAO {
             userListPstmt = conn.prepareStatement("select * from tb_users");
             userListPstmt2 = conn.prepareStatement("select * from tb_users where username like ?");
             userDetailPstmt = conn.prepareStatement("select * from tb_users where userid like ?");
-            userDeletePstmt = conn.prepareStatement("delete * from tb_users where userid like ?");
             // 5. 결과 처리
             // 6. 연결 해제
         } catch (ClassNotFoundException e) {
@@ -102,21 +100,5 @@ public class UserDAO {
         }
         return users;
     }
-    
-    
-    
-    public int delete(UserVO user) {
-        int updated = 0;
-
-        try {
-            userDeletePstmt.setString(1, user.getUserid());
-            updated = userDeletePstmt.executeUpdate();
-            conn.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return updated;
-    }
-    
     
 }
