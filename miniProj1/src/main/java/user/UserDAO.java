@@ -8,9 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import user.UserVO;
-
-
 public class UserDAO {
 	// 1. 회원가입 목록 만들기
     // 2. 삭제 구현
@@ -94,7 +91,9 @@ public class UserDAO {
                         , rs.getString("userpassword")
                         , rs.getString("username")
                         , rs.getInt("userage")
-                        , rs.getString("useremail"));
+                        , rs.getString("useremail")
+                        , rs.getString("userphone")
+                        , rs.getString("useraddress"));
             }
             rs.close();
 
