@@ -20,16 +20,12 @@ public class UserController {
      */
     public UserController() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	public Object list(HttpServletRequest request, UserVO user) throws ServletException, IOException {
 		System.out.println("목록");
-		
-		//1. 처리
 		List<UserVO> list = userService.list(user);
 		
-		//2. jsp출력할 값 설정
 		request.setAttribute("list", list);
 		
 		return "list";
@@ -37,19 +33,12 @@ public class UserController {
 	
 	public Object view(HttpServletRequest request, UserVO user) throws ServletException, IOException {
 		System.out.println("상세보기");
-		//String userid = request.getParameter("userid");
-		//1. 처리
-		
-		//2. jsp출력할 값 설정
 		request.setAttribute("user", userService.view(user));
 		return "view";
 	}
 	
 	public Object joinForm(HttpServletRequest request) throws ServletException, IOException {
 		System.out.println("등록화면");
-		//1. 처리
-		
-		//2. jsp출력할 값 설정
 		return "joinForm";
 	}
 	
@@ -61,7 +50,6 @@ public class UserController {
 			map.put("status", -1);
 			map.put("statusMessage", "사용자 아이디는 null 이거나 길이가 0인 문자열을 사용할 수 없습니다");
 		} else {
-			//1. 처리
 			int updated = userService.join(user);
 			
 			if (updated == 1) { //성공
@@ -90,19 +78,11 @@ public class UserController {
 	}
 	
 	public Object updateForm(HttpServletRequest request, UserVO user) throws ServletException, IOException {
-		System.out.println("수정화면");
-		//1. 처리
-		//usersDAO.read(user);
-		
-		//2. jsp출력할 값 설정
 		request.setAttribute("user", userService.updateForm(user));
-		
 		return "updateForm"; 
 	}
 	
 	public Object update(HttpServletRequest request, UserVO user) throws ServletException, IOException {
-		System.out.println("수정");
-
 		int updated = userService.update(user);
 
 		Map<String, Object> map = new HashMap<>();
@@ -124,6 +104,7 @@ public class UserController {
 		Map<String, Object> map = new HashMap<>();
 		if (updated == 1) { //성공
 			map.put("status", 0);
+			
 		} else {
 			map.put("status", -99);
 			map.put("statusMessage", "회원 정보 삭제 실패하였습니다");

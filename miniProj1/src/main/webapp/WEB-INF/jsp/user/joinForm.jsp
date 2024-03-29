@@ -41,14 +41,7 @@
     <script type="text/javascript">
     
     const rForm = document.getElementById("rForm");
-    const userid = document.getElementById("userid");
-    const userpassword = document.getElementById("userpassword");
-    const userpassword2 = document.getElementById("userpassword2");
-    const username = document.getElementById("username");
-    const userage = document.getElementById("userage");
-    const useremail = document.getElementById("useremail");
-    const userphone = document.getElementById("userphone");
-    const useraddress = document.getElementById("useraddress");
+
     //아이디 사용 여부 확인 
     let validUserId = "";
     
@@ -67,11 +60,10 @@
     		return false;
     	}
 		myFetch("user.do", "rForm", json => {
-			console.log("패치 확인");
 			if(json.status == 0) {
 				//성공
 				alert("회원가입을 성공 하였습니다");
-				location = "user.do?action=join";
+				location = "user.do?action=view&userid="+ userid.value;
 			} else {
 				alert(json.statusMessage);
 			}
