@@ -6,9 +6,6 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import user.UserDAO;
-import user.UserVO;
-
 
 public class UserService {
 	private static final long serialVersionUID = 1L;
@@ -28,6 +25,10 @@ public class UserService {
 	
 	public UserVO view(UserVO user) throws ServletException, IOException {
 		return userDAO.read(user);
+	}
+	
+	public int join(UserVO user) throws ServletException, IOException {
+		return userDAO.join(user);
 	}
 
 }
