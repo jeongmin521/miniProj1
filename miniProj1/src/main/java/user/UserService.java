@@ -37,5 +37,8 @@ public class UserService {
 	public int update(UserVO user) throws ServletException, IOException {
 		return userDAO.update(user);
 	}
-
+	
+	public int delete(UserVO user) throws ServletException, IOException {
+		return userDAO.delete(user);
+	}
 }

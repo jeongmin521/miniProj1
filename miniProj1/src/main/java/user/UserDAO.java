@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class UserDAO {
 	// 1. 회원가입 목록 만들기
     // 2. 삭제 구현
@@ -22,6 +21,7 @@ public class UserDAO {
     private static PreparedStatement userDetailPstmt = null; //회원 상세보기
     private static PreparedStatement userInsertPstmt = null; //회원가입
     private static PreparedStatement userUpdatePstmt = null;
+    private static PreparedStatement userDeletePstmt = null;
     
     static {
 
@@ -44,6 +44,7 @@ public class UserDAO {
             userDetailPstmt = conn.prepareStatement("select * from tb_users where userid like ?");
             userInsertPstmt = conn.prepareStatement("insert into tb_users (userid, username, userpassword, userage, useremail, userphone, useraddress) values (?, ?, ?, ?, ?, ?, ?)");
             userUpdatePstmt = conn.prepareStatement("update tb_users set username=?, userpassword=?,userage=?, useremail=?, userphone=?, useraddress=? where userid=?");//정보수정
+            userDeletePstmt = conn.prepareStatement("delete from tb_users where userid=?");
             // 5. 결과 처리
             // 6. 연결 해제
         } catch (ClassNotFoundException e) {
@@ -140,7 +141,21 @@ public class UserDAO {
             e.printStackTrace();
         }
         return updated;
-
     }
+    
+    public int delete(UserVO user) {
+        int updated = 0;
+
+        try {
+            userDeletePstmt.setString(1, user.getUserid());
+            updated = userDeletePstmt.executeUpdate();
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updated;
+    }
+
+    
     
 }

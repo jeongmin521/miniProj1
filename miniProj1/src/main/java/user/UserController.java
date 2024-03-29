@@ -116,6 +116,20 @@ public class UserController {
 		return map;
 	}
 	
-	
+	public Object delete(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+		System.out.println("삭제");
+		//1. 처리
+		int updated = userService.delete(user);
 
+		Map<String, Object> map = new HashMap<>();
+		if (updated == 1) { //성공
+			map.put("status", 0);
+		} else {
+			map.put("status", -99);
+			map.put("statusMessage", "회원 정보 삭제 실패하였습니다");
+		}
+		
+		return map;
+	}
+	
 }
