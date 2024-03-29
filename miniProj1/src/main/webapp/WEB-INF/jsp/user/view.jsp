@@ -33,7 +33,7 @@
    
     <div>
         <a href="user.do?action=list">목록</a>
-        <a href="user.do?action=updateForm">수정</a>
+        <a href="user.do?action=updateForm&userid=${user.userid}">수정</a>
     </div>
 </body>
 </html>
