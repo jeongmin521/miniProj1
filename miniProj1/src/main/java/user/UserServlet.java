@@ -77,6 +77,9 @@ public class UserServlet extends HttpServlet {
 		Object result = switch(action) {
 		case "list" -> userController.list(request, userVO);
 		case "view" -> userController.view(request, userVO);
+		case "joinForm" -> userController.joinForm(request);
+		case "join" -> userController.join(request, userVO);
+		case "existUserId" -> userController.existUserId(request, userVO);
 		default -> "";
 		};
 			
@@ -91,7 +94,7 @@ public class UserServlet extends HttpServlet {
 			} else {
 				//3. jsp 포워딩 
 				//포워딩 
-				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/"+url+".jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/"+action+".jsp");
 				rd.forward(request, response);
 			}
 		}

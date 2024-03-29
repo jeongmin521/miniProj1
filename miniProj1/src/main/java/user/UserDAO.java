@@ -18,7 +18,8 @@ public class UserDAO {
 	private static Connection conn = null;
     private static PreparedStatement userListPstmt = null;
     private static PreparedStatement userListPstmt2 = null; //회원 검색
-    private static PreparedStatement userDetailPstmt = null;
+    private static PreparedStatement userDetailPstmt = null; //회원 상세보기
+    private static PreparedStatement userInsertPstmt = null; //회원가입
     
     static {
 
@@ -39,6 +40,7 @@ public class UserDAO {
             userListPstmt = conn.prepareStatement("select * from tb_users");
             userListPstmt2 = conn.prepareStatement("select * from tb_users where username like ?");
             userDetailPstmt = conn.prepareStatement("select * from tb_users where userid like ?");
+            userInsertPstmt = conn.prepareStatement("insert into tb_users (userid, username, userpassword, userage, useremail, userphone, useraddress) values (?, ?, ?, ?, ?, ?, ?)");
             // 5. 결과 처리
             // 6. 연결 해제
         } catch (ClassNotFoundException e) {
@@ -99,6 +101,24 @@ public class UserDAO {
             e.printStackTrace();
         }
         return users;
+    }
+    
+    public int join(UserVO users){
+        int updated = 0;
+        try{
+            userInsertPstmt.setString(1, users.getUserid());
+            userInsertPstmt.setString(2, users.getUsername());
+            userInsertPstmt.setString(3, users.getUserpassword());
+            userInsertPstmt.setInt(4, users.getUserage());
+            userInsertPstmt.setString(5, users.getUseremail());
+            userInsertPstmt.setString(6, users.getUserphone());
+            userInsertPstmt.setString(7, users.getUseraddress());
+            updated = userInsertPstmt.executeUpdate();
+            conn.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return updated;
     }
     
 }

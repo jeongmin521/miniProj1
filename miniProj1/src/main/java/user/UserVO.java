@@ -18,6 +18,7 @@ public class UserVO {
 	private String username;
 	private int    userage;
 	private String userpassword;
+	private String userpassword2;
 	private String useremail;
 	private String usergender;
 	private String useraddress;
@@ -44,7 +45,6 @@ public class UserVO {
 		this.userage = userage;
 		this.useremail = useremail;
 	}
-	
 	public UserVO(String userid, String userpassword, String username, int userage, String useremail, String userphone, String useraddress) {
 		super();
 		this.userid = userid;

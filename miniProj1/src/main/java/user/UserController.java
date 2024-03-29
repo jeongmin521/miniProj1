@@ -1,12 +1,13 @@
 package user;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-
 
 public class UserController {
 	private static final long serialVersionUID = 1L;
@@ -43,5 +44,50 @@ public class UserController {
 		request.setAttribute("user", userService.view(user));
 		return "view";
 	}
+	
+	public Object joinForm(HttpServletRequest request) throws ServletException, IOException {
+		System.out.println("등록화면");
+		//1. 처리
+		
+		//2. jsp출력할 값 설정
+		return "joinForm";
+	}
+	
+	public Object join(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+		System.out.println("등록");
+		Map<String, Object> map = new HashMap<>();
+		
+		if (user.getUserid() == null  || user.getUserid().length() == 0) {
+			map.put("status", -1);
+			map.put("statusMessage", "사용자 아이디는 null 이거나 길이가 0인 문자열을 사용할 수 없습니다");
+		} else {
+			//1. 처리
+			int updated = userService.join(user);
+			
+			if (updated == 1) { //성공
+				map.put("status", 0);
+			} else {
+				map.put("status", -99);
+				map.put("statusMessage", "회원 가입이 실패하였습니다");
+			}
+		}
+		return map;
+	}
+	
+	public Object existUserId(HttpServletRequest request, UserVO userVO) throws ServletException, IOException {
+		//1. 처리
+		System.out.println("existUserId userid->" + userVO.getUserid());
+		UserVO existUser = userService.view(userVO);
+		Map<String, Object> map = new HashMap<>();
+		System.out.println(existUser);
+		
+		if (existUser == null) { //사용가능한 아이디
+			map.put("existUser", false);
+		} else { //사용 불가능 아아디 
+			map.put("existUser", true);
+		}
+		return map;
+	}
+	
 
 }
