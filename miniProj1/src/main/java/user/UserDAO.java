@@ -22,6 +22,9 @@ public class UserDAO {
     private static PreparedStatement userInsertPstmt = null; //회원가입
     private static PreparedStatement userUpdatePstmt = null;
     private static PreparedStatement userDeletePstmt = null;
+    private static PreparedStatement userValidationIdPstmt = null; //로그인
+    private static PreparedStatement userValidationPasswordPstmt = null;//로그인
+
     
     static {
 
@@ -39,12 +42,17 @@ public class UserDAO {
             System.out.println("연결 성공");
             conn.setAutoCommit(false);
 
+            //조회
             userListPstmt = conn.prepareStatement("select * from tb_users");
             userListPstmt2 = conn.prepareStatement("select * from tb_users where username like ?");
             userDetailPstmt = conn.prepareStatement("select * from tb_users where userid like ?");
+            //입력, 수정, 삭제
             userInsertPstmt = conn.prepareStatement("insert into tb_users (userid, username, userpassword, userage, useremail, userphone, useraddress) values (?, ?, ?, ?, ?, ?, ?)");
             userUpdatePstmt = conn.prepareStatement("update tb_users set username=?, userpassword=?,userage=?, useremail=?, userphone=?, useraddress=? where userid=?");//정보수정
             userDeletePstmt = conn.prepareStatement("delete from tb_users where userid=?");
+            //로그인
+            userValidationIdPstmt = conn.prepareStatement("select userid from tb_users where userid=?  ");
+            userValidationPasswordPstmt  = conn.prepareStatement("select userpassword from tb_users whrere userpassword=? ");
             // 5. 결과 처리
             // 6. 연결 해제
         } catch (ClassNotFoundException e) {
@@ -154,6 +162,36 @@ public class UserDAO {
             e.printStackTrace();
         }
         return updated;
+    }
+    
+    public boolean validationId(String userid){
+        boolean result = false;
+        try {
+            userValidationIdPstmt.setString(1, userid);
+            ResultSet rs = userValidationIdPstmt.executeQuery();
+            if (rs.next()) {
+                result = true;
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+    }
+        return result;
+    }
+
+    public boolean  validationPassword(String userpassword){
+        boolean result = false;
+        try {
+            userValidationPasswordPstmt.setString(1, userpassword);
+            ResultSet rs = userValidationPasswordPstmt.executeQuery();
+            if (rs.next()) {
+                result = true;
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     

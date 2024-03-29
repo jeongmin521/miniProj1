@@ -31,11 +31,7 @@ public class UserVO {
 	//검색키
 	private String searchKey;
 	
-	//uuid
-	private String useruuid;
-	
-	//자동로그인 여부 
-	private String autologin;
+	private String err;
 	
 	public UserVO(String userid, String userpassword, String username, int userage, String useremail) {
 		super();

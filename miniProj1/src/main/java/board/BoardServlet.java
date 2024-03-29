@@ -1,25 +1,29 @@
 package board;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import board.BoardVO;
-/**
- * Servlet implementation class BoardServlet
+import com.fasterxml.jackson.databind.ObjectMapper;
+/*
+ * MVC 
+ * Model : B/L 로직을 구현하는 부분(service + dao)  
+ * View  : 출력(jsp) 
+ * Controller : model와 view에 대한 제어를 담당 
  */
-@WebServlet("/BoardServlet")
+/**
+ * Servlet implementation class UsersServlet
+ */
 public class BoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	BoardDAO boardDAO = new BoardDAO();
-       
+      
+	BoardController boardController = new BoardController(); 
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -32,7 +36,6 @@ public class BoardServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doService(request, response);
 	}
 
@@ -40,61 +43,61 @@ public class BoardServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doService(request, response);
 	}
 	
-	protected void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
+	private Map<String, Object> convertMap(Map<String, String[]> map) {
+		Map<String, Object> result = new HashMap<>();
 
-		String action = request.getParameter("action");
-		switch(action) {
-		case "list" -> list(request, response);
-		case "view" -> view(request, response);
-//		case "updateForm" -> updateForm(request, response);
-//		case "insertForm" -> insertForm(request, response);
+		for (var entry : map.entrySet()) {
+			if (entry.getValue().length == 1) {
+				//문자열 1건  
+				result.put(entry.getKey(), entry.getValue()[0]);
+			} else {
+				//문자열 배열을 추가한다  
+				result.put(entry.getKey(), entry.getValue());
+			}
 		}
 		
-		//jsp 포워딩 
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/board/"+action+".jsp");
-		rd.forward(request, response);
+		return result;
 	}
 	
-	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("목록");
-		String searchKey = request.getParameter("searchKey");
-		System.out.println("검색값 :"+ searchKey);
-		//1. 처리
-		List<BoardVO> list = boardDAO.list(searchKey);
-
-		//2. jsp출력할 값 설정
-		request.setAttribute("list", list);
-
-	}
-	
-	private String view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("상세보기");
-		Integer bno = Integer.parseInt(request.getParameter("bno"));
-		//1. 처리
-		BoardVO board = boardDAO.read(bno);
+	//공통 처리 함수 
+	private void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//한글 설정 
+		request.setCharacterEncoding("utf-8");
+		String contentType = request.getContentType();
 		
-		//2. jsp출력할 값 설정
-		request.setAttribute("board", board);
-		return "view";
+		ObjectMapper objectMapper = new ObjectMapper();
+		BoardVO boardVO = null;
+		if (contentType == null || contentType.startsWith("application/x-www-form-urlencoded")) {
+			boardVO = objectMapper.convertValue(convertMap(request.getParameterMap()), BoardVO.class);
+		} else if (contentType.startsWith("application/json")) {
+			boardVO = objectMapper.readValue(request.getInputStream(), BoardVO.class);
+		}
+		System.out.println("boardVO " + boardVO);
+		
+		String action = boardVO.getAction();
+		Object result = switch(action) {
+		case "list" -> boardController.list(request, boardVO);
+		case "view" -> boardController.view(request, boardVO, response);
+		default -> "";
+		};
+		
+		if (result instanceof Map map) {
+			//json 문자열을 리턴 
+			response.setContentType("application/json;charset=UTF-8");
+			response.getWriter().append(objectMapper.writeValueAsString(map));
+		} else if (result instanceof String url) {
+			if (url.startsWith("redirect:")) {
+				//리다이렉트 
+				response.sendRedirect(url.substring("redirect:".length()));
+			} else {
+				//3. jsp 포워딩 
+				//포워딩 
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/board/"+action+".jsp");
+				rd.forward(request, response);
+			}
+		}
 	}
-	
-
-	
-//	private void insertForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		List<String> insertForm = new ArrayList<>();
-//		insertForm.add("등록하기");
-//		request.setAttribute("insertForm", insertForm);	
-//	}
-//	
-//	private void updateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		List<String> updateForm = new ArrayList<>();
-//		updateForm.add("수정하기");
-//		request.setAttribute("updateForm", updateForm);
-//	}
-	
 }
