@@ -4,8 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class BoardDAO {
     // 1. 게시물 목록 만들기
     // 2. 삭제 구현
@@ -51,25 +49,25 @@ public class BoardDAO {
         }
     }
 
-    public List<BoardVO> list(String searchKey) {
+    public List<BoardVO> list(BoardVO boardVO) {
         List<BoardVO> list = new ArrayList<>();
         try {
         	ResultSet rs = null;
-
+        	String searchKey = boardVO.getSearchKey();
         	if (searchKey != null && searchKey.length() != 0) {
         		boardListPstmt2.setString(1, "%" + searchKey + "%");
         		rs = boardListPstmt2.executeQuery();
         	} else {
         		rs = boardListPstmt.executeQuery();
         	}
-
+            
             while (rs.next()) {
                 BoardVO board = new BoardVO(rs.getInt("bno")
                         , rs.getString("btitle")
                         , rs.getString("bcontent")
                         , rs.getString("buserid")
                         , rs.getString("bdate"));
-
+                
                 list.add(board);
             }
             rs.close();
@@ -79,18 +77,21 @@ public class BoardDAO {
         return list;
     }
     
-    public BoardVO read(int bno) {
+    public BoardVO read(BoardVO boardVO) {
+
         BoardVO board = null;
         try {
-            boardDetailPstmt.setInt(1, bno);
+            boardDetailPstmt.setInt(1, boardVO.getBno());
 
             ResultSet rs = boardDetailPstmt.executeQuery();
             if (rs.next()) {
-                board = new BoardVO (rs.getInt("bno")
-                        , rs.getString("btitle")
-                        , rs.getString("bcontent")
-                        , rs.getString("buserid")
-                        , rs.getString("bdate"));
+            	board = BoardVO.builder()
+            			.btitle(rs.getString("btitle"))
+            			.bcontent(rs.getString("bcontent"))
+            			.bno(rs.getInt("bno"))
+            			.bdate(rs.getString("bdate"))
+            			.buserid(rs.getString("buserid"))
+            			.build();
             }
             rs.close();
 

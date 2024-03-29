@@ -8,6 +8,9 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 
 public class UserController {
 	private static final long serialVersionUID = 1L;
@@ -109,6 +112,43 @@ public class UserController {
 			map.put("status", -99);
 			map.put("statusMessage", "회원 정보 삭제 실패하였습니다");
 		}
+		
+		return map;
+	}
+	
+	public Object loginForm(HttpServletRequest request) {
+		return "loginForm";
+	}
+
+	
+	public Object login(HttpServletRequest request, UserVO userVO) throws ServletException, IOException {
+		UserVO loginVO = userService.view(userVO);
+		Map<String, Object> map = new HashMap<>();
+		
+		if (userVO.isEqualPassword(loginVO)) {
+			//로그인 사용자의 정보를 세션에 기록한다
+			HttpSession session = request.getSession();
+			session.setAttribute("loginVO", loginVO);
+			session.setMaxInactiveInterval(30*60*1000);
+			map.put("status", 0);
+		} else {
+			map.put("status", -1);
+			map.put("statusMessage", "아이디 또는 비밀번호가 잘못되었습니다");
+			System.out.println("로그인실패");
+		}
+		//로그인 완료
+		return map;
+	}
+
+	public Object logout(HttpServletRequest request) {
+		Map<String, Object> map = new HashMap<>();
+		
+		//로그인 사용자의 정보를 세션에 제거한다
+		HttpSession session = request.getSession();
+		System.out.println("logout session id = " + session.getId());
+		session.removeAttribute("loginVO"); //특정 이름을 제거한다
+		session.invalidate(); //세션에 저장된 모든 자료를 삭제한다 
+		map.put("status", 0);
 		
 		return map;
 	}

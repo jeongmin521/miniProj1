@@ -83,6 +83,9 @@ public class UserServlet extends HttpServlet {
 		case "updateForm" -> userController.updateForm(request, userVO);
 		case "update" -> userController.update(request, userVO);
 		case "delete" -> userController.delete(request, userVO);
+		case "loginForm" -> userController.loginForm(request);
+		case "login" -> userController.login(request, userVO);
+		case "logout" -> userController.logout(request);
 		default -> "";
 		};
 			
