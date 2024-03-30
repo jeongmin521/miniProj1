@@ -17,6 +17,11 @@ public class BoardDAO {
     private static PreparedStatement boardListPstmt = null; //게시글 리스트
     private static PreparedStatement boardListPstmt2 = null; //검색했을때 그 키워드를 가진 게시글 불러오기
     private static PreparedStatement boardDetailPstmt = null;
+    
+    private static PreparedStatement boardInsertPstmt = null;
+    private static PreparedStatement boardDeletePstmt = null;
+    private static PreparedStatement boardUpdatePstmt = null;
+
 
 
     static {
@@ -38,6 +43,10 @@ public class BoardDAO {
             boardListPstmt = conn.prepareStatement("select * from tb_boards");
             boardListPstmt2 = conn.prepareStatement("select * from tb_boards where btitle like ?");
             boardDetailPstmt = conn.prepareStatement("select * from tb_boards where bno = ?");
+            
+            boardInsertPstmt = conn.prepareStatement("insert into tb_boards (bno, btitle, bcontent, buserid) values (seq_bno.nextval, ?, ?, ?)");
+            boardDeletePstmt = conn.prepareStatement("delete from tb_boards where bno = ?");
+            boardUpdatePstmt = conn.prepareStatement("update tb_boards set btitle = ?, bcontent = ? where bno = ?");
 
             // 5. 결과 처리
             // 6. 연결 해제
@@ -99,6 +108,48 @@ public class BoardDAO {
             e.printStackTrace();
         }
         return board;
+    }
+    
+    public int insert(BoardVO users){
+        int updated = 0;
+        try{
+            boardInsertPstmt.setString(1, users.getBtitle());
+            boardInsertPstmt.setString(2, users.getBcontent());
+            boardInsertPstmt.setString(3, users.getBuserid());
+            updated = boardInsertPstmt.executeUpdate();
+            conn.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return updated;
+    }
+    
+    public int update(BoardVO board) {
+        int updated = 0;
+        try {
+            boardUpdatePstmt.setString(1, board.getBtitle());
+            boardUpdatePstmt.setString(2, board.getBcontent());
+            boardUpdatePstmt.setInt(3, board.getBno());
+            updated = boardUpdatePstmt.executeUpdate();
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updated;
+
+    }
+
+    public int delete(BoardVO boardVO) {
+        int updated = 0;
+
+        try {
+            boardDeletePstmt.setInt(1, boardVO.getBno());
+            updated = boardDeletePstmt.executeUpdate();
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updated;
     }
 
 }

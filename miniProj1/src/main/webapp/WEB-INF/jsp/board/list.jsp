@@ -36,7 +36,8 @@
 </head>
 <body>
 	<h1>게시물목록</h1>
-	<form id="searchForm" action="board.do" method="post" >
+	<h3>로그인 : ${loginVO.userid} </h3>
+    <form id="searchForm" action="board.do" method="post" >
     	<input type="hidden" id="action" name="action" value="list">
     	<label>제목</label>
     	<input type="text" id="searchKey" name="searchKey" value="${param.searchKey}">
@@ -47,7 +48,7 @@
     	<input type="hidden" id="action" name="action" value="view">
     	<input type="hidden" id="bno" name="bno" >
     </form>
-    
+   
     <table border="1">
         <tr>
             <th>게시물번호</th>
@@ -64,17 +65,19 @@
         </tr>
         </c:forEach>
     </table>
-	<script>
-		function jsView(bno) {
-			//인자의 값을 설정한다 
-			bno.value = bno;
-			
-			//양식을 통해서 서버의 URL로 값을 전달한다
-			listForm.submit();
-		}
-	</script>     
-	<div class="button-container">
-	    <a href="board.do?action=insertForm">등록</a>
-	</div>
+<script>
+function jsView(bno) {
+	//인자의 값을 설정한다 
+	bno.value = bno;
+	
+	//양식을 통해서 서버의 URL로 값을 전달한다
+	listForm.submit();
+	
+}
+</script>      
+    <div class="button-container">
+        <a href="board.do?action=insertForm">등록</a>
+        <a href="index.html">목록</a>
+    </div>
 </body>
 </html>

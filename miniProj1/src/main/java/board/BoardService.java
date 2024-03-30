@@ -41,20 +41,20 @@ public class BoardService  {
 		return boardDAO.read(board);
 	}
 	
-//	public int delete(BoardVO board) throws ServletException, IOException {
-//		return boardDAO.delete(board);
-//	}
-//	
-//	public BoardVO updateForm(BoardVO board) throws ServletException, IOException {
-//		return boardDAO.read(board);
-//	}
-//	
-//	public int update(BoardVO board) throws ServletException, IOException {
-//		return boardDAO.update(board);
-//	}
-//	
-//	public int insert(BoardVO board) throws ServletException, IOException {
-//		return boardDAO.insert(board);
-//	}
+	public int delete(BoardVO board) throws ServletException, IOException {
+		return boardDAO.delete(board);
+	}
+	
+	public BoardVO updateForm(BoardVO board) throws ServletException, IOException {
+		return boardDAO.read(board);
+	}
+	
+	public int update(BoardVO board) throws ServletException, IOException {
+		return boardDAO.update(board);
+	}
+	
+	public int insert(BoardVO board) throws ServletException, IOException {
+		return boardDAO.insert(board);
+	}
 	
 }
