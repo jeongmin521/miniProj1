@@ -70,7 +70,6 @@ public class UserController {
 		System.out.println("existUserId userid->" + userVO.getUserid());
 		UserVO existUser = userService.view(userVO);
 		Map<String, Object> map = new HashMap<>();
-		System.out.println(existUser);
 		
 		if (existUser == null) { //사용가능한 아이디
 			map.put("existUser", false);
@@ -120,24 +119,21 @@ public class UserController {
 		return "loginForm";
 	}
 
-	
-	public Object login(HttpServletRequest request, UserVO userVO) throws ServletException, IOException {
+	public String login(HttpServletRequest request, UserVO userVO, HttpServletResponse response) throws ServletException, IOException {
 		UserVO loginVO = userService.view(userVO);
-		Map<String, Object> map = new HashMap<>();
 		
 		if (userVO.isEqualPassword(loginVO)) {
 			//로그인 사용자의 정보를 세션에 기록한다
 			HttpSession session = request.getSession();
 			session.setAttribute("loginVO", loginVO);
 			session.setMaxInactiveInterval(30*60*1000);
-			map.put("status", 0);
+			System.out.println("로그인정보 : " + loginVO);
+			
 		} else {
-			map.put("status", -1);
-			map.put("statusMessage", "아이디 또는 비밀번호가 잘못되었습니다");
-			System.out.println("로그인실패");
+			//map.put("statusMessage", "아이디 또는 비밀번호가 잘못되었습니다");
+			return "redirect:user.do?action=loginForm&err=invalidUserId";
 		}
-		//로그인 완료
-		return map;
+		return "redirect:board.do?action=list";
 	}
 
 	public Object logout(HttpServletRequest request) {
@@ -145,12 +141,19 @@ public class UserController {
 		
 		//로그인 사용자의 정보를 세션에 제거한다
 		HttpSession session = request.getSession();
+		//세션에서 로그인 정보를 얻는다
+		UserVO loginVO = (UserVO) session.getAttribute("loginVO");
+		
 		System.out.println("logout session id = " + session.getId());
 		session.removeAttribute("loginVO"); //특정 이름을 제거한다
 		session.invalidate(); //세션에 저장된 모든 자료를 삭제한다 
-		map.put("status", 0);
+		System.out.println("로그아웃 완료");
 		
-		return map;
+		return "redirect:index.html";
 	}
 	
+	public Object myPage(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+		System.out.println("상세보기");
+		return "myPage";
+	}
 }

@@ -6,32 +6,36 @@ import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * Servlet implementation class UserServlet
+/*
+ * MVC 
+ * Model : B/L 로직을 구현하는 부분(service + dao)  
+ * View  : 출력(jsp) 
+ * Controller : model와 view에 대한 제어를 담당 
  */
-@WebServlet("/UserServlet")
+/**
+ * Servlet implementation class UsersServlet
+ */
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	      
+      
 	UserController userController = new UserController(); 
-	   /**
-	    * @see HttpServlet#HttpServlet()
-	    */
-	   public UserServlet() {
-	       super();
-	       // TODO Auto-generated constructor stub
-	   }
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public UserServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	*/
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doService(request, response);
 	}
@@ -42,7 +46,7 @@ public class UserServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doService(request, response);
 	}
-		
+	
 	private Map<String, Object> convertMap(Map<String, String[]> map) {
 		Map<String, Object> result = new HashMap<>();
 
@@ -54,16 +58,17 @@ public class UserServlet extends HttpServlet {
 				//문자열 배열을 추가한다  
 				result.put(entry.getKey(), entry.getValue());
 			}
-		}			
+		}
+		
 		return result;
 	}
-		
+	
 	//공통 처리 함수 
 	private void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//한글 설정 
 		request.setCharacterEncoding("utf-8");
 		String contentType = request.getContentType();
-			
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		UserVO userVO = null;
 		if (contentType == null || contentType.startsWith("application/x-www-form-urlencoded")) {
@@ -72,23 +77,24 @@ public class UserServlet extends HttpServlet {
 			userVO = objectMapper.readValue(request.getInputStream(), UserVO.class);
 		}
 		System.out.println("userVO " + userVO);
-			
+		
 		String action = userVO.getAction();
 		Object result = switch(action) {
 		case "list" -> userController.list(request, userVO);
 		case "view" -> userController.view(request, userVO);
+		case "delete" -> userController.delete(request, userVO);
+		case "updateForm" -> userController.updateForm(request, userVO);
+		case "update" -> userController.update(request, userVO);
 		case "joinForm" -> userController.joinForm(request);
 		case "join" -> userController.join(request, userVO);
 		case "existUserId" -> userController.existUserId(request, userVO);
-		case "updateForm" -> userController.updateForm(request, userVO);
-		case "update" -> userController.update(request, userVO);
-		case "delete" -> userController.delete(request, userVO);
 		case "loginForm" -> userController.loginForm(request);
-		case "login" -> userController.login(request, userVO);
+		case "login" -> userController.login(request, userVO, response);
 		case "logout" -> userController.logout(request);
+		case "myPage" -> userController.myPage(request, userVO);
 		default -> "";
 		};
-			
+		
 		if (result instanceof Map map) {
 			//json 문자열을 리턴 
 			response.setContentType("application/json;charset=UTF-8");
@@ -100,7 +106,7 @@ public class UserServlet extends HttpServlet {
 			} else {
 				//3. jsp 포워딩 
 				//포워딩 
-				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/"+action+".jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/"+url+".jsp");
 				rd.forward(request, response);
 			}
 		}
