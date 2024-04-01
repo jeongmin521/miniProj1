@@ -106,7 +106,7 @@ public class UserServlet extends HttpServlet {
 			} else {
 				//3. jsp 포워딩 
 				//포워딩 
-				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/"+url+".jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/user/"+action+".jsp");
 				rd.forward(request, response);
 			}
 		}

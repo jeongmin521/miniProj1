@@ -88,7 +88,7 @@ public class BoardServlet extends HttpServlet {
 		case "insert" -> boardController.insert(request, boardVO);
 		default -> "";
 		};
-		
+		 
 		if (result instanceof Map map) {
 			//json 문자열을 리턴 
 			response.setContentType("application/json;charset=UTF-8");

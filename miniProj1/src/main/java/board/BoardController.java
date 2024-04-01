@@ -54,7 +54,7 @@ public class BoardController {
 			map.put("statusMessage", "게시물 삭제 실패");
 		}
 		
-		return map;
+		return "redirect:board.do?action=list";
 	}
 	
 	public Object updateForm(HttpServletRequest request, BoardVO board) throws ServletException, IOException {
@@ -76,7 +76,7 @@ public class BoardController {
 			map.put("statusMessage", "게시물 수정 실패");
 		}
 		
-		return map;
+		return "redirect:board.do?action=list";
 	}
 	
 	public Object insertForm(HttpServletRequest request) throws ServletException, IOException {

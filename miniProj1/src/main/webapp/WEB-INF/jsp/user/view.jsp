@@ -20,7 +20,7 @@
 </head>
 <body>
     <h1>
-        view 임시 화면
+        회원 정보
     </h1>
    
       <label>아이디 : ${user.userid}</label> <br/>
